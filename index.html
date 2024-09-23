@@ -14,12 +14,42 @@
         text {
             font-family: 'League Gothic', sans-serif;
         }
+        #overlayText {
+            position: absolute;
+            top: 3px;  /* Adjust to position the text */
+            left: 40px;
+            z-index: 2;  /* Ensure the text is in front of the SVG */
+            font-size: 26px;
+            color: rgb(252, 121, 121);
+        }
+        #generateButton {
+            position: absolute;  /* Positioning the button over the canvas */
+            top:  3px;
+            left: 50px;
+            z-index: 2;  /* Ensure the text is in front of the SVG */
+            font-size: 16px;
+            font-weight: bold;
+            border: none;
+            border-radius: 4px; /* Optional rounded corners */
+            cursor: pointer;
+            box-shadow: 0 3px #6d4107; /* 3D shadow effect */
+            transition: all 0.2s ease; /* Smooth hover transition */
+        }
+        #generateButton:active {
+            box-shadow: 0 2px #3e8e41;
+            transform: translateY(1px); /* Move the button slightly down when clicked */
+        }
+        #svgContainer {
+            position: relative;
+        }
+
     </style>
 </head>
 <body>
-    <h1>Dynamic Image Generator</h1>
-    <button id="generateButton">Generate New Image</button>
-    <br><br>
-    <svg id="imageCanvas" width="1792" height="1024"></svg>
+    <div id="svgContainer">
+        <h2 id="overlayText">Marquee Generator</h2>
+        <button id="generateButton">Generate New Marquee</button>
+        <svg id="imageCanvas" width="1344" height="768"></svg>
+    </div>
 </body>
 </html>

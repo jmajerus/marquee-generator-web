@@ -6,22 +6,22 @@ const svgApp = {
         this.svg = d3.select("#imageCanvas");
 
         // Load the background image
-        const backgroundImage = svg.append("image")
+        const backgroundImage = this.svg.append("image")
             .attr("xlink:href", "background.png")  // Path to your Krita-exported image
-            .attr("width", 1792)
-            .attr("height", 1024);
+            .attr("width", 1344)
+            .attr("height", 768);
     
     },
 
     fetchTextLines: function() {
-        console.log("Function called");  // Logs when the function is executed
+        console.log("fetchTextLines called");  // Logs when the function is executed
         const svgElement = document.querySelector("svg");
         console.log(svgElement);  // Logs the SVG element to see if it's being selected
         fetch('text-lines.json')
             .then(response => response.json())
             .then(data => {
                 const randomLines = d3.shuffle(data.lines).slice(0, 5);
-                updateText(randomLines);
+                this.updateText(randomLines);
             })
             .catch(error => console.error('Error fetching text lines:', error));
     },
@@ -32,11 +32,11 @@ const svgApp = {
             .data(randomLines)
             .enter()
             .append("text")
-            .attr("x", 896)
-            .attr("y", (d, i) => 372 + i * 60)
-            .attr("font-size", "48px")
+            .attr("x", 675)
+            .attr("y", (d, i) => 188 + i * 52)
+            .attr("font-size", "39px")
             .attr("fill", "black")
-            .attr("text-anchor", "start")
+            .attr("text-anchor", "middle")
             .text(d => d);
     }
     
@@ -46,8 +46,8 @@ window.onload = function() {
     svgApp.init();
 };
 
-document.getElementById("myButton").addEventListener("click", function() {
-    svgApp.fetchTextLines();
+document.getElementById("generateButton").addEventListener("click", function() {
+    svgApp.fetchTextLines();  // Use a regular function as a fallback
 });
 
 

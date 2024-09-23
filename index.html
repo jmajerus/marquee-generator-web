@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dynamic Image with D3.js</title>
+    <script src="https://d3js.org/d3.v6.min.js"></script>
+    <script src="script.js" defer></script>
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=League+Gothic&display=swap');
+
+        /* Ensure the text uses the League Gothic font */
+        text {
+            font-family: 'League Gothic', sans-serif;
+        }
+    </style>
+</head>
+<body>
+    <h1>Dynamic Image Generator</h1>
+    <button id="generateButton">Generate New Image</button>
+    <br><br>
+    <svg id="imageCanvas" width="1792" height="1024"></svg>
+</body>
+</html>

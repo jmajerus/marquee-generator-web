@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Marquee Generator Web</title>
     <script src="https://d3js.org/d3.v6.min.js"></script>
-    <script src="script.js" defer></script>
+    <script src="app.js" defer></script>
 
     <style>
         @import url('https://fonts.googleapis.com/css2?family=League+Gothic&display=swap');
@@ -37,9 +37,11 @@
             box-shadow: 0 3px #3a3a39; /* 3D shadow effect */
             transition: all 0.2s ease; /* Smooth hover transition */
         }
-        #generateButton:active {
-            box-shadow: 0 2px #3e8e41;
-            transform: translateY(1px); /* Move the button slightly down when clicked */
+        /* Add this to the CSS */
+        #generateButton.active {
+            background-color: darkgray;  /* Change button color when pressed */
+            transform: translateY(1px);  /* Visual 'pressed' effect */
+            box-shadow: 0 2px black;
         }
         #clickCount {
             position: absolute;

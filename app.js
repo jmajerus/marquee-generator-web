@@ -1,7 +1,7 @@
 const svgApp = {
     svg: null,
     clickCount: 0,
-    maxClicks: 300,  // Maximum number of simulated clicks
+    maxClicks: 5000,  // Maximum number of simulated clicks
     intervalTime: 9000,  // 1000 ms = 1 second interval
     clickInterval: null,
 
@@ -60,6 +60,24 @@ const svgApp = {
             .text(d => d);
     },
 
+    generateMarquee: function() {
+        console.log("generateMarquee called");  
+    
+        // Increment the click count when the button is pressed
+        this.clickCount++;
+        this.clickCountDisplay.textContent = this.clickCount;  // Update the displayed count
+    
+        // Fetch and update the text lines
+        this.fetchTextLines();
+        
+        // Only reset the timer if the checkbox is checked (i.e., auto-click is enabled)
+        if (this.toggleAutoClickCheckbox.checked) {
+            clearInterval(this.clickInterval);  // Clear the current interval
+            this.clickInterval = setInterval(this.handleClick.bind(this), this.intervalTime);  // Restart the interval
+        }
+    },
+    
+
     // Handle the "click" logic directly
     handleClick: function() {
         if (this.clickCount < this.maxClicks) {
@@ -77,27 +95,26 @@ const svgApp = {
         }
     },
 
-    // Simulate the visual "press" effect of the button
     simulateButtonPress: function() {
         this.button.classList.add('active');  // Add active class for pressed state
-
+    
         // Remove the class after a short delay to mimic the button press release
         setTimeout(() => {
             this.button.classList.remove('active');
-        }, 300);  // 300 ms delay for visual effect
+        }, 350);  // 350 ms delay for visual effect
     },
-
+    
     // Toggle the auto-click loop on or off
     toggleAutoClick: function() {
+        clearInterval(this.clickInterval);  // Always clear any existing interval
+    
         if (this.toggleAutoClickCheckbox.checked) {
-            // Start the automatic "clicking" (directly calling handleClick)
+            // Start a new automatic "clicking" process if the checkbox is checked
             this.clickInterval = setInterval(this.handleClick.bind(this), this.intervalTime);
-        } else {
-            // Stop the automatic "clicking"
-            clearInterval(this.clickInterval);
-            clickCount = 0;  // Reset the click count
         }
+        // If the checkbox is unchecked, the interval won't restart, effectively stopping the auto-clicking
     }
+    
     
 }
 
@@ -106,7 +123,9 @@ window.onload = function() {
 };
 
 document.getElementById("generateButton").addEventListener("click", function() {
-    svgApp.fetchTextLines();  // Use a regular function as a fallback
+    svgApp.generateMarquee();  // Generate the marquee content
+    svgApp.simulateButtonPress();  // Apply the visual button press effect
 });
+
 
 

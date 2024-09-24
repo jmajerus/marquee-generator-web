@@ -1,9 +1,12 @@
 const svgApp = {
     svg: null,
-    clickCount: 0,
-    maxClicks: 5000,  // Maximum number of simulated clicks
+    clickCount: 0,  // Visual counter for each iteration of text lines
+    totalIterations: 0,  // Global counter to limit the total number of iterations
+    maxIterations: 5000,  // Maximum number of allowed iterations
     intervalTime: 9000,  // 1000 ms = 1 second interval
     clickInterval: null,
+    allTextLines: [],  // All possible text lines, loaded from file
+    remainingLines: [],  // Remaining lines that haven't been picked yet
 
     init: function() {
         console.log("init called"); 
@@ -17,9 +20,7 @@ const svgApp = {
         // Store references for easy access in other methods
         this.button = button;
         this.clickCountDisplay = clickCountDisplay;
-        this.toggleAutoClickCheckbox = toggleAutoClickCheckbox;
-
-        
+        this.toggleAutoClickCheckbox = toggleAutoClickCheckbox;       
         this.svg = d3.select("#imageCanvas");
 
         // Load the background image
@@ -28,22 +29,53 @@ const svgApp = {
             .attr("width", 1344)
             .attr("height", 768);
         // Load marquee text    
-        this.fetchTextLines();   
+        this.loadTextLines();  // Load text lines from file 
         this.toggleAutoClickCheckbox.checked = true;  // check the checkbox by default  
         this.toggleAutoClick();  // Start the auto-click loop by default
     },
-
-    fetchTextLines: function() {
-        console.log("fetchTextLines called");  // Logs when the function is executed
-        const svgElement = document.querySelector("svg");
-        console.log(svgElement);  // Logs the SVG element to see if it's being selected
+    
+    // Load text lines from the JSON file
+    loadTextLines: function() {
         fetch('text-lines.json')
             .then(response => response.json())
             .then(data => {
-                const randomLines = d3.shuffle(data.lines).slice(0, 5);
-                this.updateText(randomLines);
+                this.allTextLines = data.lines;  // Store all text lines
+                this.remainingLines = d3.shuffle([...this.allTextLines]);  // Shuffle the lines initially
+                this.fetchTextLines();  // Display the initial set of lines
             })
             .catch(error => console.error('Error fetching text lines:', error));
+    },
+
+    // Fetch the next set of text lines
+    fetchTextLines: function() {
+        console.log("fetchTextLines called");
+
+        // Check if we've reached the maximum number of iterations
+        if (this.totalIterations >= this.maxIterations) {
+            console.log("Max iterations reached. Stopping...");
+            clearInterval(this.clickInterval);  // Stop any auto-clicking
+            return;  // Stop further execution
+        }
+
+        // If remainingLines is empty, reshuffle allTextLines and reset the visual counter
+        if (this.remainingLines.length === 0) {
+            this.remainingLines = d3.shuffle([...this.allTextLines]);  // Reshuffle text lines
+            this.clickCount = 0;  // Reset the visual counter when all lines are used
+            document.getElementById("clickCount").textContent = this.clickCount;  // Update display
+        }
+
+        // Increment the visual counter and the total iterations
+        this.clickCount++;
+        this.totalIterations++;
+
+        // Update the visual counter display
+        document.getElementById("clickCount").textContent = this.clickCount;
+
+        // Take the next 5 lines
+        const nextLines = this.remainingLines.slice(0, 5);
+        this.remainingLines = this.remainingLines.slice(5);  // Remove used lines
+
+        this.updateText(nextLines);  // Update the text on the display
     },
 
     updateText: function(randomLines) {
@@ -53,12 +85,12 @@ const svgApp = {
             .enter()
             .append("text")
             .attr("x", 675)
-            .attr("y", (d, i) => 188 + i * 52)
+            .attr("y", function(d, i) { return 188 + i * 52; })
             .attr("font-size", "39px")
             .attr("fill", "black")
             .attr("text-anchor", "middle")
-            .text(d => d);
-    },
+            .text(function(d) { return d; });
+    },    
 
     generateMarquee: function() {
         console.log("generateMarquee called");  
@@ -106,15 +138,14 @@ const svgApp = {
     
     // Toggle the auto-click loop on or off
     toggleAutoClick: function() {
-        clearInterval(this.clickInterval);  // Always clear any existing interval
-    
         if (this.toggleAutoClickCheckbox.checked) {
-            // Start a new automatic "clicking" process if the checkbox is checked
-            this.clickInterval = setInterval(this.handleClick.bind(this), this.intervalTime);
+            console.log("Auto-click started");
+            this.clickInterval = setInterval(this.fetchTextLines.bind(this), 9000);  // Start auto-clicking every 9 seconds
+        } else {
+            console.log("Auto-click stopped");
+            clearInterval(this.clickInterval);  // Stop auto-clicking when the checkbox is unchecked
         }
-        // If the checkbox is unchecked, the interval won't restart, effectively stopping the auto-clicking
     }
-    
     
 }
 

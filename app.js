@@ -10,6 +10,13 @@ const svgApp = {
 
     init: function() {
         console.log("init called"); 
+        this.svg = d3.select("#imageCanvas");
+        // Load the background image
+        const backgroundImage = this.svg.append("image")
+            .attr("xlink:href", "background.png")  // Path to your Krita-exported image
+            .attr("width", 1344)
+            .attr("height", 768);
+            
         const button = document.getElementById('generateButton');
         const clickCountDisplay = document.getElementById('clickCount');
         const toggleAutoClickCheckbox = document.getElementById('toggleAutoClick');
@@ -21,13 +28,7 @@ const svgApp = {
         this.button = button;
         this.clickCountDisplay = clickCountDisplay;
         this.toggleAutoClickCheckbox = toggleAutoClickCheckbox;       
-        this.svg = d3.select("#imageCanvas");
-
-        // Load the background image
-        const backgroundImage = this.svg.append("image")
-            .attr("xlink:href", "background.png")  // Path to your Krita-exported image
-            .attr("width", 1344)
-            .attr("height", 768);
+  
         // Load marquee text    
         this.loadTextLines();  // Load text lines from file 
         this.toggleAutoClickCheckbox.checked = true;  // check the checkbox by default  
@@ -46,7 +47,7 @@ const svgApp = {
             .catch(error => console.error('Error fetching text lines:', error));
     },
 
-    // Fetch the next set of text lines
+    
     fetchTextLines: function() {
         console.log("fetchTextLines called");
 

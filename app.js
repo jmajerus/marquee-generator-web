@@ -16,7 +16,7 @@ const svgApp = {
             .attr("xlink:href", "background.png")  // Path to your Krita-exported image
             .attr("width", 1344)
             .attr("height", 768);
-            
+
         const button = document.getElementById('generateButton');
         const clickCountDisplay = document.getElementById('clickCount');
         const toggleAutoClickCheckbox = document.getElementById('toggleAutoClick');
@@ -87,7 +87,7 @@ const svgApp = {
             .append("text")
             .attr("x", 675)
             .attr("y", function(d, i) { return 188 + i * 52; })
-            .attr("font-size", "39px")
+            .attr("font-size", "37px")
             .attr("fill", "black")
             .attr("text-anchor", "middle")
             .text(function(d) { return d; });
@@ -95,11 +95,7 @@ const svgApp = {
 
     generateMarquee: function() {
         console.log("generateMarquee called");  
-    
-        // Increment the click count when the button is pressed
-        this.clickCount++;
-        this.clickCountDisplay.textContent = this.clickCount;  // Update the displayed count
-    
+
         // Fetch and update the text lines
         this.fetchTextLines();
         
@@ -113,19 +109,9 @@ const svgApp = {
 
     // Handle the "click" logic directly
     handleClick: function() {
-        if (this.clickCount < this.maxClicks) {
-            this.clickCount++;
-            this.clickCountDisplay.textContent = this.clickCount;  // Update the displayed count
-            this.fetchTextLines();  // Call the function to fetch and update the text lines   
-            console.log('Button functionality executed!');
-
-            // Simulate button press visual effect
-            this.simulateButtonPress();
-        } else {
-            clearInterval(this.clickInterval);  // Stop clicking after maxClicks is reached
-            this.toggleAutoClickCheckbox.checked = false;  // Uncheck the checkbox when max clicks reached
-            clickCount = 0;  // Reset the click count
-        }
+        this.fetchTextLines();  // Call the function to fetch and update the text lines   
+        // Simulate button press visual effect
+        this.simulateButtonPress();
     },
 
     simulateButtonPress: function() {

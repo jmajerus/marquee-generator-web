@@ -28,8 +28,7 @@ const svgApp = {
         console.log("attaching button listeners"); 
         // Attach button event listener here (inside the object)
         button.addEventListener("click", () => {
-            this.handleManualClick();  // Generate the marquee content
-            this.simulateButtonPress();  // Apply the visual button press effect
+            this.handleButtonClick();  // Generate the marquee content
         });
     
         console.log("attaching checkbox event listener"); 
@@ -51,14 +50,13 @@ const svgApp = {
         this.toggleAutoAdvanceCheckbox.checked = true;  // Check the checkbox by default  
         this.toggleAutoAdvance();  // Start the auto-click loop by default
         // Check if auto-advance is enabled and start the timer if it is
-        //this.startAutoAdvance();  // Start the timer
+        this.startAutoAdvance();  // Start the timer
     },
 
     startAutoAdvance: function() {
         clearInterval(this.autoAdvanceInterval);  // Clear any existing interval
         this.autoAdvanceInterval = setInterval(() => {
-            this.incrementGroupIndex(1);  // Auto-advance the groupIndex
-            this.fetchTextLines();        // Fetch the next lines
+            this.advanceGroupIndex(1);  // Auto-advance the groupIndex
         }, this.intervalTime);
     },  
     
@@ -95,17 +93,11 @@ const svgApp = {
             .text(function(d) { return d; });
     },
     
-    handleManualClick: function() {
-        console.log("Manual button click");
-        this.incrementGroupIndex(1);  // Increment by 1 on button click
-        this.fetchTextLines();  // Manually trigger the text update
-     
-        // Debounce the auto-click interval by resetting the timer
-        if (this.toggleAutoAdvanceCheckbox.checked) {
-            clearInterval(this.advanceInterval);  // Clear the current interval
-            this.advanceInterval = setInterval(this.handleManualClick.bind(this), this.intervalTime);  // Restart the interval
-        }
+    handleButtonClick: function() {
+        this.simulateButtonPress();  // Apply the visual button press effect
+        this.advanceGroupIndex(1);  // Advance forward on button click
     },
+    
     
     simulateButtonPress: function() {
         this.button.classList.add('active');  // Add active class for pressed state
@@ -113,41 +105,53 @@ const svgApp = {
         // Remove the class after a short delay to mimic the button press release
         setTimeout(() => {
             this.button.classList.remove('active');
-        }, 350);  // 350 ms delay for visual effect
+        }, 250);  // 250 ms delay for visual effect
     },
 
-    incrementGroupIndex: function(amount) {
-        const numberOfGroups = Math.ceil(this.allTextLines.length / 5);  // Calculate total groups based on allTextLines
+    advanceGroupIndex: function(amount) {
+        const numberOfGroups = Math.ceil(this.allTextLines.length / 5);  // Calculate total groups
         this.groupIndex += amount;
-
-        // Ensure it wraps around correctly
+    
+        // Wraparound logic: Loop back to the start or end
         if (this.groupIndex >= numberOfGroups) {
             this.groupIndex = 0;  // Loop back to the first group
         } else if (this.groupIndex < 0) {
             this.groupIndex = numberOfGroups - 1;  // Loop back to the last group
         }
-        // Update the groupIndex display after incrementing/decrementing
-        this.groupIndexDisplay.textContent = this.groupIndex + 1;  // Display 1-based index to user
-        console.log("Updated groupIndex:", this.groupIndex);  // Log the updated groupIndex
+    
+        // Fetch the updated set of text lines
+        this.fetchTextLines();
+    
+        // Update the displayed groupIndex (1-based index)
+        this.groupIndexDisplay.textContent = this.groupIndex + 1;
+        this.simulateButtonPress();  // Apply the visual button press effect
+    
+        // Debounce the auto-advance timer if enabled
+        if (this.toggleAutoAdvanceCheckbox.checked) {
+            clearInterval(this.autoAdvanceInterval);  // Clear the existing interval
+             // Restart the interval with the updated groupIndex
+            this.autoAdvanceInterval = setInterval(this.advanceGroupIndex.bind(this, 1), this.intervalTime); 
+        }
     },
+    
 
     handleKeyNavigation: function(event) {
+        const isCheckboxFocused = document.activeElement === this.toggleAutoAdvanceCheckbox;
+
+        // Let the browser handle the space bar when the checkbox is focused
+        if (event.key === ' ' && isCheckboxFocused) {
+            return;  // Let the default behavior toggle the checkbox
+        }
+        
         if (event.key === 'ArrowRight') {
-            this.incrementGroupIndex(1);  // Increment by 1 for right arrow key
-            this.fetchTextLines();
+            this.advanceGroupIndex(1);  // Move forward
         }
     
         if (event.key === 'ArrowLeft') {
-            this.incrementGroupIndex(-1);  // Decrement by 1 for left arrow key
-            this.fetchTextLines();
-        }
-    
-        // Debounce the auto-click interval by resetting the timer
-        if (this.toggleAutoAdvanceCheckbox.checked) {
-            clearInterval(this.advanceInterval);  // Clear the current interval
-            this.advanceInterval = setInterval(this.handleManualClick.bind(this), this.intervalTime);  // Restart the interval
+            this.advanceGroupIndex(-1);  // Move backward
         }
     },
+    
     
     // Toggle the auto-click loop on or off
     toggleAutoAdvance: function() {

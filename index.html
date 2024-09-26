@@ -44,7 +44,7 @@
             transform: translateY(1px);  /* Visual 'pressed' effect */
             box-shadow: 0 2px black;
         }
-        #clickCount {
+        #groupIndexDisplay {
             position: absolute;
             top: 55px;
             left: 250px;
@@ -52,7 +52,7 @@
             font-size: 16px;
             color: rgb(252, 121, 121);
         }
-        #toggleAutoClick {
+        #toggleAutoAdvanceCheckbox {
             position: absolute;
             top: 54px;
             left: 208px;
@@ -71,8 +71,8 @@
     <div id="svgContainer">
         <h2 id="overlayText">Marquee Generator</h2>
         <button id="generateButton">Generate New Marquee</button>
-        <span id="clickCount">0</span>
-        <input type="checkbox" id="toggleAutoClick" checked>
+        <span id="groupIndexDisplay">1</span>
+        <input type="checkbox" id="toggleAutoAdvanceCheckbox" checked>
         <svg id="imageCanvas" width="1344" height="768"></svg>
     </div>
 </body>

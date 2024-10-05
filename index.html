@@ -17,7 +17,7 @@
         }
         #overlayText {
             position: absolute;
-            top: 10px;  /* Adjust to position the text */
+            top: 65px;  /* Adjust to position the text */
             left: 60px;
             z-index: 2;  /* Ensure the text is in front of the SVG */
             font-size: 24px;
@@ -61,6 +61,14 @@
             color: rgb(124, 60, 60);
             background-color: gray;
         }
+        #topicSelect {
+            position: absolute;  /* Positioning the button over the canvas */
+            top:  35px;
+            left: 60px;     
+            z-index: 2;  /* Ensure the text is in front of the SVG */
+            font-size: 16px;
+            font-weight: bold;
+        }
         #svgContainer {
             position: relative;
         }
@@ -70,6 +78,10 @@
 <body>
     <div id="svgContainer">
         <h2 id="overlayText">Marquee Generator</h2>
+        <select id="topicSelect">
+            <option value="All">All</option>
+            <!-- Dynamic options will be added here in the JS code -->
+        </select>
         <button id="generateButton">Generate New Marquee</button>
         <span id="groupIndexDisplay">1</span>
         <input type="checkbox" id="toggleAutoAdvanceCheckbox" checked>

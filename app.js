@@ -15,7 +15,8 @@ const svgApp = {
     currentTopicIndex: 0,  
     groupSize: 5,  // Number of text lines per group
     shuffleTopics: true,  // Enable or disable topic shuffling
-    shuffleLines: true,  // Enable or disable line shuffling within topics
+    shuffleLines: true,  // Enable or disable line shuffling within topics                                                                                                                      
+    dataFile: 'Conspiracy Satire.json',
 
     init: function() {
         console.log("init called"); 
@@ -54,7 +55,7 @@ const svgApp = {
 
     // Load topics and lines, applying line shuffling based on shuffleLines flag
     loadTextLines: function() {
-        fetch('data.json')
+        fetch(this.dataFile)
             .then(response => response.json())
             .then(data => {
                 console.log('Fetched topics and text lines:', data);  

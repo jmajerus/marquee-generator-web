@@ -2,6 +2,8 @@
 
 This project is a **web-based application** that dynamically places random lines of text onto a static background image using **D3.js**. The app displays a pre-specified background and randomly selects text lines from a provided dataset to overlay on top of the image. This project is ideal for showcasing dynamic text rendering on visual media using **SVG** in a web browser.
 
+### Live view: [Marquee Generator Web](https://agreeable-sky-0b2ab0210.5.azurestaticapps.net/)
+
 ## Features
 - **D3.js integration** for rendering dynamic text on an SVG element.
 - Static background image (`background.png`).
